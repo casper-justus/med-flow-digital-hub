@@ -25,8 +25,15 @@ import { useNavigate } from "react-router-dom";
 const Billing = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-
-  const bills = [
+  const [newBill, setNewBill] = useState({
+    patientName: "",
+    patientId: "",
+    services: "",
+    totalAmount: "",
+    insuranceProvider: "Self Pay",
+    dueDate: ""
+  });
+  const [bills, setBills] = useState([
     {
       id: "BILL001",
       patientName: "John Smith",
@@ -83,7 +90,7 @@ const Billing = () => {
       insuranceProvider: "Quick Health",
       dueDate: "2024-07-22"
     }
-  ];
+  ]);
 
   const paymentMethods = [
     { name: "Cash", percentage: 25, amount: 12500 },
@@ -121,6 +128,45 @@ const Billing = () => {
   const totalRevenue = bills.reduce((sum, bill) => sum + bill.paidAmount, 0);
   const totalOutstanding = bills.reduce((sum, bill) => sum + bill.balance, 0);
 
+  const createBill = () => {
+    if (newBill.patientName && newBill.patientId && newBill.services && newBill.totalAmount && newBill.dueDate) {
+      const newBillData = {
+        ...newBill,
+        id: `BILL${String(bills.length + 1).padStart(3, '0')}`,
+        services: newBill.services.split(",").map(s => s.trim()),
+        totalAmount: parseFloat(newBill.totalAmount),
+        paidAmount: 0,
+        balance: parseFloat(newBill.totalAmount),
+        status: "pending",
+        paymentMethod: "Not Set"
+      };
+      setBills([...bills, newBillData]);
+      setNewBill({
+        patientName: "",
+        patientId: "",
+        services: "",
+        totalAmount: "",
+        insuranceProvider: "Self Pay",
+        dueDate: ""
+      });
+    }
+  };
+
+  const payBill = (billId: string) => {
+    const newBills = bills.map(bill => {
+      if (bill.id === billId) {
+        return {
+          ...bill,
+          paidAmount: bill.totalAmount,
+          balance: 0,
+          status: "paid"
+        };
+      }
+      return bill;
+    });
+    setBills(newBills);
+  };
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -148,19 +194,18 @@ const Billing = () => {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
-                <Input placeholder="Patient Name" />
-                <Input placeholder="Patient ID" />
-                <Input placeholder="Services (comma separated)" />
-                <Input placeholder="Total Amount" type="number" step="0.01" />
-                <select className="w-full px-3 py-2 border rounded-md">
-                  <option>Insurance Provider</option>
+                <Input placeholder="Patient Name" value={newBill.patientName} onChange={(e) => setNewBill({...newBill, patientName: e.target.value})} />
+                <Input placeholder="Patient ID" value={newBill.patientId} onChange={(e) => setNewBill({...newBill, patientId: e.target.value})} />
+                <Input placeholder="Services (comma separated)" value={newBill.services} onChange={(e) => setNewBill({...newBill, services: e.target.value})} />
+                <Input placeholder="Total Amount" type="number" step="0.01" value={newBill.totalAmount} onChange={(e) => setNewBill({...newBill, totalAmount: e.target.value})} />
+                <select className="w-full px-3 py-2 border rounded-md" value={newBill.insuranceProvider} onChange={(e) => setNewBill({...newBill, insuranceProvider: e.target.value})}>
                   <option>HealthCare Plus</option>
                   <option>MediCare Pro</option>
                   <option>Quick Health</option>
                   <option>Self Pay</option>
                 </select>
-                <Input placeholder="Due Date" type="date" />
-                <Button className="w-full">Create Bill</Button>
+                <Input placeholder="Due Date" type="date" value={newBill.dueDate} onChange={(e) => setNewBill({...newBill, dueDate: e.target.value})} />
+                <Button className="w-full" onClick={createBill}>Create Bill</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -288,7 +333,7 @@ const Billing = () => {
                               <Download className="w-3 h-3" />
                             </Button>
                             {bill.balance > 0 && (
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" onClick={() => payBill(bill.id)}>
                                 Pay
                               </Button>
                             )}
