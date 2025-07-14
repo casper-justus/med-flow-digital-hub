@@ -18,6 +18,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarProvider, PatientFlowGroup, HospitalFunctionsGroup } from "@/components/ui/sidebar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -90,10 +91,44 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+    <SidebarProvider>
+      <div className="flex min-h-screen">
+        <Sidebar>
+          <SidebarHeader>
+            <h2 className="text-lg font-semibold">Hospital HMS</h2>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/dashboard")}>Dashboard</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/inventory")}>Inventory</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/scheduling")}>Scheduling</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/radiology")}>Radiology</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/laboratory")}>Laboratory</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/billing")}>Billing</SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => navigate("/queue")}>Queue</SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+            <PatientFlowGroup />
+            <HospitalFunctionsGroup />
+          </SidebarContent>
+        </Sidebar>
+        <main className="flex-1 p-6 bg-background">
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground">Hospital Management System</h1>
             <p className="text-muted-foreground">Comprehensive healthcare management platform</p>
@@ -193,8 +228,10 @@ const Dashboard = () => {
             </div>
           </CardContent>
         </Card>
+          </div>
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

@@ -2,6 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
+import { Link } from "react-router-dom"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -733,9 +734,62 @@ const SidebarMenuSubButton = React.forwardRef<
 })
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton"
 
+const PatientFlowGroup: React.FC = () => (
+  <SidebarGroup>
+    <SidebarGroupLabel>Patient Flow</SidebarGroupLabel>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <Link to="/reception">
+          <SidebarMenuButton>Reception</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <Link to="/triage">
+          <SidebarMenuButton>Triage</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <Link to="/doctor">
+          <SidebarMenuButton>Doctor</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <Link to="/pharmacy">
+          <SidebarMenuButton>Pharmacy</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarGroup>
+);
+
+const HospitalFunctionsGroup: React.FC = () => (
+  <SidebarGroup>
+    <SidebarGroupLabel>Hospital Functions</SidebarGroupLabel>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <Link to="/surgery">
+          <SidebarMenuButton>Surgery</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <Link to="/admission">
+          <SidebarMenuButton>Admission</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+        <Link to="/emergency">
+          <SidebarMenuButton>Emergency</SidebarMenuButton>
+        </Link>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarGroup>
+);
+
 export {
   Sidebar,
   SidebarContent,
+  PatientFlowGroup,
+  HospitalFunctionsGroup,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupAction,
