@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -42,13 +42,13 @@ const Queue: React.FC = () => {
     }
   };
 
-  const triageQueue = patients.filter((p) => p.queue === 'Triage');
-  const doctorQueue = patients.filter((p) => p.queue === 'Doctor').sort((a, b) => {
+  const triageQueue = useMemo(() => patients.filter((p) => p.queue === 'Triage'), [patients]);
+  const doctorQueue = useMemo(() => patients.filter((p) => p.queue === 'Doctor').sort((a, b) => {
     if (a.isEmergency && !b.isEmergency) return -1;
     if (!a.isEmergency && b.isEmergency) return 1;
     return 0;
-  });
-  const pharmacyQueue = patients.filter((p) => p.queue === 'Pharmacy');
+  }), [patients]);
+  const pharmacyQueue = useMemo(() => patients.filter((p) => p.queue === 'Pharmacy'), [patients]);
 
   return (
     <div className="p-6">
@@ -99,7 +99,7 @@ interface QueueColumnProps {
   onCallNext: () => void;
 }
 
-const QueueColumn: React.FC<QueueColumnProps> = ({ title, queue, onCallNext }) => {
+const QueueColumn: React.FC<QueueColumnProps> = memo(({ title, queue, onCallNext }) => {
   return (
     <Card>
       <CardHeader>
@@ -123,6 +123,6 @@ const QueueColumn: React.FC<QueueColumnProps> = ({ title, queue, onCallNext }) =
       </CardContent>
     </Card>
   );
-};
+});
 
 export default Queue;
