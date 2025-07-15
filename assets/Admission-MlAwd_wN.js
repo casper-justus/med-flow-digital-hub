@@ -1,0 +1,1 @@
+import{j as s}from"./index-BSlHM_4E.js";const e=()=>s.jsxs("div",{children:[s.jsx("h1",{className:"text-2xl font-bold",children:"Admission"}),s.jsx("p",{children:"This is the admission page."})]});export{e as default};
